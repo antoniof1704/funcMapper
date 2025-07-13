@@ -5,8 +5,8 @@
   },
   "settings": {},
   "extensions": [
-    "REditorSupport.r",           // R language support
-    "ikuyadeu.r-lsp"              // Language Server Protocol support
+    "REditorSupport.r",
+    "ikuyadeu.r-lsp"
   ],
-  "postCreateCommand": "R -e \"languageserver::run()\""
+  "postCreateCommand": "git config --global user.name 'Antonio Fratamico' && git config --global user.email 'fratamicoa@outlook.com'"
 }
