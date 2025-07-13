@@ -1,7 +1,6 @@
-# Use Rocker's official R base image (includes R preinstalled)
 FROM rocker/r-base:latest
 
-# Install Git and system dependencies for devtools and R packages
+# Install Git and system dependencies for devtools and related packages
 RUN apt-get update && \
     apt-get install -y \
     git \
@@ -13,12 +12,18 @@ RUN apt-get update && \
     libgit2-dev \
     libharfbuzz-dev \
     libfribidi-dev \
-    build-essential \
-    libfontconfig1-dev && \
+    libfontconfig1-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    build-essential && \
     locale-gen en_US.UTF-8 && \
     apt-get clean
 
-# Install R packages including devtools
+# Install R packages in stages to avoid dependency chain breakage
+RUN R -e "install.packages(c('pkgdown'), repos='https://cloud.r-project.org')"
+
 RUN R -e "install.packages(c(\
   'devtools', \
   'languageserver', \
