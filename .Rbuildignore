@@ -1,0 +1,14 @@
+^funcMapper\.Rproj$
+^\.Rproj\.user$
+^\.git$
+^\.gitignore$
+^README\.md$
+^cran-comments\.md$
+^LICENSE\.md$
+^\.vscode$
+^\.DS_Store$
+^\.idea$
+^tests/testthat/_snaps$
+^cran-comments\\.md$
+^doc$
+^Meta$
