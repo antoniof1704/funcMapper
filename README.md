@@ -1,7 +1,7 @@
 # funcMapper
 
 [![CRAN version](https://www.r-pkg.org/badges/version/funcMapper)](https://CRAN.R-project.org/package=funcMapper)
-[![R-CMD-check](https://github.com/antoniof1704/funcMapper/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/antoniof1704/funcMapper/actions)
+[![R-CMD-check](https://github.com/antoniof1704/funcMapper/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/antoniof1704/funcMapper/actions/workflows/R-CMD-check.yaml)
 [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/funcMapper)](https://cran.r-project.org/package=funcMapper)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
