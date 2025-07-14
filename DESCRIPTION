@@ -1,12 +1,12 @@
 Package: funcMapper
-Title: Map User Created Functions in R
+Title: Map User-Created Functions in R
 Version: 1.0.0
 Authors@R: 
-    person("Antonio", "Fratamico", , "fratamicoa@outlook.com", role = c("aut", "cre"))
-Description: funcMapper creates an interactive function map by analysing a specified
-    R script. It uses the find_dependencies() function from the
-    functiondepends package to recursively trace all user-defined function
-    dependencies.
+    person("Antonio", "Fratamico", email = "fratamicoa@outlook.com", role = c("aut", "cre"))
+Description: Create an interactive function map by analyzing a specified
+    R script. It uses the 'find_dependencies()' function from the
+    'functiondepends' package to recursively trace all user-defined
+    function dependencies.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
