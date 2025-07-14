@@ -1,6 +1,9 @@
 # funcMapper
 
-NEED TO ADD RELEASE NUMBER, RMD CHECKED, AND DOWNLOADS
+[![CRAN version](https://www.r-pkg.org/badges/version/funcMapper)](https://CRAN.R-project.org/package=funcMapper)
+[![R-CMD-check](https://github.com/yourusername/funcMapper/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yourusername/funcMapper/actions)
+[![Monthly Downloads](https://cranlogs.r-pkg.org/badges/funcMapper)](https://cran.r-project.org/package=funcMapper)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Overview
 funcMapper is an R package designed to visualise all user-defined functions in a given R script, along with any other user-defined functions they depend on. This tool helps users understand how functions are interconnected within a codebase.
