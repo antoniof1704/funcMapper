@@ -28,6 +28,22 @@ Description: This function plots the dep_map from build_dependency_map(), by fir
 to convert it from a list of data frames to a unified edge list, which is then used in a visNetwork plot. This is then
 saved to the output path with the output name (both defined in funcMapper) as an HTML file.
 }
+\examples{
+dep_map <- list(
+  funcA = data.frame(from = "funcA", to = c("funcB", "funcC")),
+  funcB = data.frame(from = "funcB", to = "funcD")
+)
+output_path <- tempdir()
+output_name <- "example_map"
+main_node <- "funcA"
+
+plot_dependency_graph(
+  dep_map = dep_map,
+  output_path = output_path,
+  output_name = output_name,
+  main_node = main_node
+)
+}
 \details{
 Author: Antonio Fratamico
 Date: 10/07/2025
