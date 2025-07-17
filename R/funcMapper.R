@@ -53,10 +53,11 @@ funcMapper <- function(script_path,
   writeLines(wrapped_lines, temp_file)
 
   # Source the wrapped script
-  source(temp_file, local = .GlobalEnv)
+  local_env <- new.env(parent = baseenv())
+  source(temp_file, local = local_env)
 
   # Build dependency map
-  dep_map <- build_dependency_map(script_name)
+  dep_map <- build_dependency_map(script_name, env = local_env)
 
   # Plot dependency map
   plot_dependency_graph(dep_map, output_path, output_name, script_name)
