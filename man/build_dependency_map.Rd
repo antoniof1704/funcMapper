@@ -4,7 +4,7 @@
 \alias{build_dependency_map}
 \title{Brief: Build Recursive Dependency Map of User-Defined Functions}
 \usage{
-build_dependency_map(func_name, visited = character(), all_deps = list())
+build_dependency_map(func_name, visited = character(), all_deps = list(), env = parent.frame)
 }
 \arguments{
 \item{func_name}{The name of the main function (converted from the main script) to begin tracing dependencies from.}
@@ -12,6 +12,8 @@ build_dependency_map(func_name, visited = character(), all_deps = list())
 \item{visited}{A character vector used to track already visited functions and prevent infinite recursion.}
 
 \item{all_deps}{A list used to accumulate the dependency data frames for each user-defined function.}
+
+\item{env}{The local environment created in \code{funcMapper()}.}
 }
 \value{
 A named list of data frames, where each data frame contains the dependencies of a user-defined function.
