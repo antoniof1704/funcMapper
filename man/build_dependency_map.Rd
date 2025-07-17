@@ -22,6 +22,15 @@ and its dependencies. Starting from the main function (typically the main script
 find_dependencies() from the functiondepends package to trace all user-defined function calls. The process
 continues until no new dependencies are found.
 }
+\examples{
+my_fun <- function(x) {
+  helper_fun(x) + 1
+}
+helper_fun <- function(x) {
+  x * 2
+}
+build_dependency_map("my_fun")
+}
 \details{
 Author: Antonio Fratamico
 Date: 10/07/2025
