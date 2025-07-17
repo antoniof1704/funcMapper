@@ -31,6 +31,23 @@ Description: This function generates an interactive function map of all user-def
 from a specified R script (the "main script"). It leverages the find_dependencies() function from the functiondepends
 package to recursively trace all user-created function dependencies within the script.
 }
+\examples{
+script_file <- tempfile(fileext = ".R")
+writeLines(c(
+  "example_func1 <- function(x) {",
+  "  test <- x + 2",
+  "  example_func2(test)",
+  "}",
+  "example_func2 <- function(x) {",
+  "  test2 <- x * 3",
+  "}"
+), script_file)
+
+funcMapper(script_file, 
+          "TEST_MAP", 
+          tempdir()
+)
+}
 \details{
 The process begins by converting the main script into a function (if it isn't already), enabling the tool to
 identify and highlight the root function in the resulting map. It then iteratively explores each function, parsing
