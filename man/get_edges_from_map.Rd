@@ -17,6 +17,13 @@ Description: Converts a dependency map (as produced by build_dependency_map(), w
 representing function dependencies, into a unified edge list with from and to columns. This format is required
 for visualizing the function relationships using visNetwork.
 }
+\examples{
+dep_map <- list(
+  funcA = data.frame(from = "funcC", to = "funcD"),
+  funcB = data.frame(from = "funcE", to = c("funcF","funcG"))
+)
+get_edges_from_map(dep_map)
+}
 \details{
 Author: Antonio Fratamico
 Date: 10/07/2025
