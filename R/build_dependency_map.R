@@ -16,7 +16,7 @@
 #' @return A named list of data frames, where each data frame contains the dependencies of a user-defined function.
 
 
-build_dependency_map <- function(func_name, visited = character(), all_deps = list()) {
+build_dependency_map <- function(func_name, visited = character(), all_deps = list(), env = parent.frame()) {
   func_name <- as.character(func_name) # Ensure it's a string
 
   # if function in visited return list
@@ -36,8 +36,8 @@ build_dependency_map <- function(func_name, visited = character(), all_deps = li
 
 
   # Get all objects in the global environment
-  all_objs <- ls(envir = .GlobalEnv)
-  all_objs_list <- mget(all_objs, envir = .GlobalEnv, inherits = FALSE)
+  all_objs <- ls(envir = env)
+  all_objs_list <- mget(all_objs, envir = env, inherits = FALSE)
 
   # Filter to keep only functions (user funcs)
   user_funcs <- names(all_objs_list)[sapply(all_objs_list, is.function)]
