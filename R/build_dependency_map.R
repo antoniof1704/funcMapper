@@ -13,6 +13,7 @@
 #' @param func_name The name of the main function (converted from the main script) to begin tracing dependencies from.
 #' @param visited A character vector used to track already visited functions and prevent infinite recursion.
 #' @param all_deps A list used to accumulate the dependency data frames for each user-defined function.
+#' @param env The local enviroment created in funcMapper()
 #' @return A named list of data frames, where each data frame contains the dependencies of a user-defined function.
 
 
@@ -31,7 +32,7 @@ build_dependency_map <- function(func_name, visited = character(), all_deps = li
 
   for (dep_func in deps$Source) {
     dep_func <- as.character(dep_func) # Ensure each dependency is a string
-    all_deps <- build_dependency_map(dep_func, visited, all_deps)
+    all_deps <- build_dependency_map(dep_func, visited, all_deps, env)
   }
 
 
