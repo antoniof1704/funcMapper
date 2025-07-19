@@ -18,7 +18,7 @@ test_that("build_dependency_map correctly maps function dependencies using funct
   assign("func_c", temp_env$func_c, envir = temp_env)
 
   # Run the function
-  dep_map <- build_dependency_map("func_a", temp_env)
+  dep_map <- build_dependency_map("func_a", env = temp_env)
 
   # Check that the result is a list and contains expected function names
   expect_type(dep_map, "list")

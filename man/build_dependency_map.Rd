@@ -4,7 +4,12 @@
 \alias{build_dependency_map}
 \title{Brief: Build Recursive Dependency Map of User-Defined Functions}
 \usage{
-build_dependency_map(func_name, visited = character(), all_deps = list(), env = parent.frame)
+build_dependency_map(
+  func_name,
+  visited = character(),
+  all_deps = list(),
+  env = parent.frame()
+)
 }
 \arguments{
 \item{func_name}{The name of the main function (converted from the main script) to begin tracing dependencies from.}
@@ -13,7 +18,7 @@ build_dependency_map(func_name, visited = character(), all_deps = list(), env = 
 
 \item{all_deps}{A list used to accumulate the dependency data frames for each user-defined function.}
 
-\item{env}{The local environment created in \code{funcMapper()}.}
+\item{env}{The local enviroment created in funcMapper()}
 }
 \value{
 A named list of data frames, where each data frame contains the dependencies of a user-defined function.
@@ -23,15 +28,6 @@ Description: This function recursively builds a list of data frames, each repres
 and its dependencies. Starting from the main function (typically the main script wrapped as a function), it uses
 find_dependencies() from the functiondepends package to trace all user-defined function calls. The process
 continues until no new dependencies are found.
-}
-\examples{
-my_fun <- function(x) {
-  helper_fun(x) + 1
-}
-helper_fun <- function(x) {
-  x * 2
-}
-build_dependency_map("my_fun")
 }
 \details{
 Author: Antonio Fratamico

@@ -18,32 +18,31 @@
 
 
 build_dependency_map <- function(func_name, visited = character(), all_deps = list(), env = parent.frame()) {
-  func_name <- as.character(func_name) # Ensure it's a string
+  func_name <- as.character(func_name)
 
-  # if function in visited return list
   if (func_name %in% visited) {
     return(all_deps)
   }
 
   visited <- c(visited, func_name)
-  deps <- functiondepends::find_dependencies(func_name)
+
+  # Use correct env
+  deps <- functiondepends::find_dependencies(func_name, env)
 
   all_deps[[func_name]] <- deps
 
-  for (dep_func in deps$Source) {
-    dep_func <- as.character(dep_func) # Ensure each dependency is a string
-    all_deps <- build_dependency_map(dep_func, visited, all_deps, env)
+  # Check if deps has a 'Source' column and recurse
+  if (!is.null(deps) && "Source" %in% names(deps)) {
+    for (dep_func in deps$Source) {
+      dep_func <- as.character(dep_func)
+      all_deps <- build_dependency_map(dep_func, visited, all_deps, env)
+    }
   }
 
-
-  # Get all objects in the global environment
+  # Restrict to user-defined functions in env
   all_objs <- ls(envir = env)
   all_objs_list <- mget(all_objs, envir = env, inherits = FALSE)
-
-  # Filter to keep only functions (user funcs)
   user_funcs <- names(all_objs_list)[sapply(all_objs_list, is.function)]
-
-  # Keep only user created functions
   all_deps <- all_deps[names(all_deps) %in% user_funcs]
 
   return(all_deps)
