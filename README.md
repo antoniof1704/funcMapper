@@ -15,7 +15,11 @@ It is especially useful for:
 
 ## Installation
 
-To fill in later.....
+Install the latest version of renv from CRAN with:
+
+``` r
+install.packages("funcMapper")
+```
 
 ## How to Use funcMapper 
 
@@ -48,4 +52,8 @@ Note: You can run funcMapper on any script, not just the main script of a projec
 
 ## More Information 
 
-To fill in later........
+* funcMapper is available on [CRAN](https://cran.r-project.org/web/packages/funcMapper/index.html)
+
+* An introduction to funcMapper is available in the [vignette](https://cran.r-project.org/web/packages/funcMapper/vignettes/funcMapper-guidance.html)
+
+* Please report bugs or other issues [here](https://github.com/antoniof1704/funcMapper/issues).
