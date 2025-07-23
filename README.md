@@ -15,7 +15,7 @@ It is especially useful for:
 
 ## Installation
 
-Install the latest version of renv from CRAN with:
+Install the latest version of funcMapper from CRAN with:
 
 ``` r
 install.packages("funcMapper")
