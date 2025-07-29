@@ -20,6 +20,7 @@
 #' @param source run the script if have not done already to load functions into environment (default is FALSE not to run it)
 #' @param cleanup_temp_file delete temporary script file converted into function for the mapping process (default is TRUE - might not want to delete)
 #' @return Save a function map (html file) in designated output path
+#' @export
 
 
 funcMapper <- function(script_path,
