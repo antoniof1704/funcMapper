@@ -15,6 +15,7 @@
 #' @param all_deps A list used to accumulate the dependency data frames for each user-defined function.
 #' @param env The local enviroment created in funcMapper()
 #' @return A named list of data frames, where each data frame contains the dependencies of a user-defined function.
+#' @export
 
 
 build_dependency_map <- function(func_name, visited = character(), all_deps = list(), env = parent.frame()) {
