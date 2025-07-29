@@ -10,6 +10,7 @@
 #' @importFrom stats na.omit
 #' @param dep_map A named list of data frames, where each data frame contains the dependencies of a user-defined function.
 #' @return A data frame representing the edge list, with columns from and to, suitable for plotting with visNetwork.
+#' @export
 
 
 get_edges_from_map <- function(dep_map) {
