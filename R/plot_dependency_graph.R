@@ -17,6 +17,7 @@
 #' @param output_name name of the function map (defined in funcMapper)
 #' @param main_node this is always set to the script name, generated from script path in funcMapper. Used to highlight main script node in red.
 #' @return A visNetwork plot of the user created function map, saved to the output path
+#' @export
 
 
 plot_dependency_graph <- function(dep_map, output_path, output_name, main_node = script_name) {
