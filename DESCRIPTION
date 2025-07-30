@@ -1,6 +1,6 @@
 Package: funcMapper
 Title: Map User-Created Functions
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: 
     person("Antonio", "Fratamico", email = "fratamicoa@outlook.com", role = c("aut", "cre"))
 Description: Create an interactive function map by analyzing a specified

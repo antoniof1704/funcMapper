@@ -33,7 +33,7 @@ Arguments:
 
 *output_path*: Directory where the HTML file will be saved (do not include a trailing /).
 
-*source*: Whether to run the script to load functions into the global environment (default is FALSE; set to TRUE if needed).
+*source*: Whether to run the script to load functions into the global environment (default is FALSE; set to TRUE if needed). If set to TRUE, the function will fail if the underlying script encounters any errors during execution.
 
 *cleanup_temp_file*: Whether to delete the temporary script file used during mapping (default is TRUE; set to FALSE to retain it).
 
