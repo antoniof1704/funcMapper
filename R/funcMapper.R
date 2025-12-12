@@ -1,72 +1,78 @@
-#' Brief: Map User Created Functions in any R Script
+
+#' Brief: Map User-Defined Functions from an R Script
 #'
-#' Description: This function generates an interactive function map of all user-defined functions that originate
-#' from a specified R script (the "main script"). It leverages the find_dependencies() function from the functiondepends
-#' package to recursively trace all user-created function dependencies within the script.
+#' Description: This function generates an interactive dependency map of all user-defined
+#' functions originating from a specified R script. It leverages the `find_dependencies()`
+#' function from the **functiondepends** package to recursively trace relationships between
+#' functions defined in the script.
 #'
-#' The process begins by converting the main script into a function (if it isn't already), enabling the tool to
-#' identify and highlight the root function in the resulting map. It then iteratively explores each function, parsing
-#' and mapping any nested user-defined functions until the full dependency tree is uncovered.
+#' The process begins by sourcing the script into an isolated environment, ensuring all
+#' top-level function definitions are available for analysis. It then iteratively explores
+#' each function, mapping any nested user-defined dependencies until the full tree is uncovered.
 #'
-#' The final output is a hierarchical VisNetwork visualisation that clearly illustrates the structure and relationships
-#' between functions, with the main script node distinctly highlighted in red for easy identification.
+#' The final output is a hierarchical **visNetwork** visualisation that clearly illustrates
+#' the structure and relationships between functions, with the chosen root function highlighted
+#' in red for easy identification.
 #'
 #' Author: Antonio Fratamico
-#' Date: 10/07/2025
+#' Date: 12/12/2025
 #'
-#' @param script_path File path of R script you wish to map the functions of (need to specify .R at end of script name)
-#' @param output_name name of the function map (no need to specify .html)
-#' @param output_path path to save function map to (no need for '/' at end of path)
-#' @param source run the script if have not done already to load functions into environment (default is FALSE not to run it)
-#' @param cleanup_temp_file delete temporary script file converted into function for the mapping process (default is TRUE - might not want to delete)
-#' @return Save a function map (html file) in designated output path
-#' @export
 
+#' @param script_path character Path to the R script you want to analyse.
+#' @param output_name character Base filename for the output (no extension).
+#' @param output_path character Directory to save the output HTML.
+#' @param func_name   character|NULL Entry function to analyse. If NULL,
+#'   we try tools::file_path_sans_ext(basename(script_path)).
+#' @param source      logical Source the script into a private env (default TRUE).
+#'
+#' @return (invisibly) the dependency map (named list)
+#' @export
 
 funcMapper <- function(script_path,
                        output_name,
                        output_path,
-                       source = FALSE,
-                       cleanup_temp_file = TRUE
-) {
+                       func_name = NULL,
+                       source = TRUE) {
 
-  # Optional - Run script path to load function into global env (if not already run)
-  if (source) {
-    source(script_path)
-  }
+  stopifnot(length(script_path) == 1L, file.exists(script_path))
 
-  # Read and indent the script
-  script_lines <- readLines(script_path)
-  indented_lines <- paste0(" ", script_lines)
-
-  # Get script name you want to map
-  script_name <- tools::file_path_sans_ext(basename(script_path))
-
-  # Wrap in a function
-  wrapped_lines <- c(
-    sprintf("%s <- function() {", script_name),
-    indented_lines,
-    "}"
-  )
-
-  # Write to temp file
-  temp_file = tempfile(fileext = ".R")
-  writeLines(wrapped_lines, temp_file)
-
-  # Source the wrapped script
+  # Private environment (CRAN-safe; no .GlobalEnv writes)
   local_env <- new.env(parent = baseenv())
-  source(temp_file, local = local_env)
 
-  # Build dependency map
-  dep_map <- build_dependency_map(script_name, env = local_env)
-
-  # Plot dependency map
-  plot_dependency_graph(dep_map, output_path, output_name, script_name)
-
-  # Optionally delete the temp file
-  if (cleanup_temp_file && file.exists(temp_file)) {
-    file.remove(temp_file)
+  if (isTRUE(source)) {
+    # Source TOP-LEVEL definitions into local_env
+    sys.source(script_path, envir = local_env)
   }
 
+  # Infer entry function name from script if not provided
+  if (is.null(func_name)) {
+    inferred <- tools::file_path_sans_ext(basename(script_path))
+    if (exists(inferred, envir = local_env, inherits = FALSE) &&
+        is.function(get(inferred, envir = local_env, inherits = FALSE))) {
+      func_name <- inferred
+    } else {
+      # If not found, list available top-level functions to guide the user
+      all_objs  <- ls(envir = local_env)
+      obj_list  <- mget(all_objs, envir = local_env, inherits = FALSE)
+      user_funs <- names(obj_list)[vapply(obj_list, is.function, logical(1))]
+      stop(sprintf(
+        "Could not infer an entry function from '%s'.\nAvailable functions in the script: %s\n",
+        inferred,
+        if (length(user_funs)) paste(user_funs, collapse = ", ") else "<none>"
+      ))
+    }
+  }
+
+  # Sanity check
+  if (!exists(func_name, envir = local_env, inherits = FALSE) ||
+      !is.function(get(func_name, envir = local_env, inherits = FALSE))) {
+    stop(sprintf("Function '%s' was not found (or is not a function) in the sourced script.", func_name))
+  }
+
+  # Build dependency map and render
+  dep_map <- build_dependency_map(func_name = func_name, env = local_env)
+  plot_dependency_graph(dep_map, output_path, output_name, root_name = func_name)
+
+  invisible(dep_map)
 }
 
