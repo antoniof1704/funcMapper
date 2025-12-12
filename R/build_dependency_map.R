@@ -1,50 +1,55 @@
+
 #' Brief: Build Recursive Dependency Map of User-Defined Functions
 #'
-#' Description: This function recursively builds a list of data frames, each representing a user-defined function
-#' and its dependencies. Starting from the main function (typically the main script wrapped as a function), it uses
-#' find_dependencies() from the functiondepends package to trace all user-defined function calls. The process
-#' continues until no new dependencies are found.
+#' @description Recursively constructs a dependency map for user-defined functions
+#' starting from a specified root function. The function uses
+#' `functiondepends::find_dependencies()` to identify direct callees and then
+#' iterates through each dependency until the full tree is resolved.
 #'
-#' Author: Antonio Fratamico
-#' Date: 10/07/2025
+#' Unlike earlier versions, this implementation:
+#' - Accepts a root function name and an environment containing all sourced functions.
+#' - Returns a named list where each element is a character vector of immediate dependencies.
+#' - Handles missing functions gracefully by recording them with an empty vector.
 #'
+#' @details The recursion stops when all user-defined functions reachable from the root
+#' have been visited. Only functions present in the provided environment are included.
+#'
+#' @author Antonio Fratamico
+#' @date 12/12/2025
 #'
 #' @importFrom functiondepends find_dependencies
-#' @param func_name The name of the main function (converted from the main script) to begin tracing dependencies from.
-#' @param visited A character vector used to track already visited functions and prevent infinite recursion.
-#' @param all_deps A list used to accumulate the dependency data frames for each user-defined function.
-#' @param env The local enviroment created in funcMapper()
-#' @return A named list of data frames, where each data frame contains the dependencies of a user-defined function.
+#' @param func_name Character scalar. The name of the root function to begin tracing from.
+#' @param env Environment containing user-defined functions (typically created in `funcMapper()`).
+#' @param visited Character vector of already visited function names (internal use).
+#' @param all_deps Named list accumulating dependencies (internal use).
+#'
+#' @return A named list where each name is a function and its value is a character vector
+#' of user-defined functions it directly calls.
 #' @export
 
+build_dependency_map <- function(func_name, env, visited = character(), all_deps = list()) {
+  if (func_name %in% visited) return(all_deps)
+  visited <- c(visited, func_name)
 
-build_dependency_map <- function(func_name, visited = character(), all_deps = list(), env = parent.frame()) {
-  func_name <- as.character(func_name)
-
-  if (func_name %in% visited) {
+  if (!exists(func_name, envir = env) || !is.function(env[[func_name]])) {
+    all_deps[[func_name]] <- character(0)
     return(all_deps)
   }
 
-  visited <- c(visited, func_name)
+  target_fun <- env[[func_name]]
+  deps <- tryCatch(functiondepends::find_dependencies(target_fun, env), error = function(e) NULL)
 
-  # Use correct env
-  deps <- functiondepends::find_dependencies(func_name, env)
+  callee_col <- intersect(c("Source", "Function", "Callee"), names(deps))
+  callees <- if (length(callee_col)) unique(as.character(deps[[callee_col[1]]])) else character(0)
 
-  all_deps[[func_name]] <- deps
+  all_deps[[func_name]] <- callees
 
-  # Check if deps has a 'Source' column and recurse
-  if (!is.null(deps) && "Source" %in% names(deps)) {
-    for (dep_func in deps$Source) {
-      dep_func <- as.character(dep_func)
-      all_deps <- build_dependency_map(dep_func, visited, all_deps, env)
+  for (dep in callees) {
+    if (exists(dep, envir = env) && is.function(env[[dep]])) {
+      all_deps <- build_dependency_map(dep, env, visited, all_deps)
     }
   }
 
-  # Restrict to user-defined functions in env
-  all_objs <- ls(envir = env)
-  all_objs_list <- mget(all_objs, envir = env, inherits = FALSE)
-  user_funcs <- names(all_objs_list)[sapply(all_objs_list, is.function)]
-  all_deps <- all_deps[names(all_deps) %in% user_funcs]
-
-  return(all_deps)
+  all_deps
 }
+
