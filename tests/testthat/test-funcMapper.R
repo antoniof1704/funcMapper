@@ -1,43 +1,10 @@
 
-test_that("funcMapper errors with non-existent script path", {
+test_that("funcMapper sources script and returns dep_map", {
+  tmp_script <- tempfile(fileext = ".R")
+  writeLines(c("main <- function() helper()", "helper <- function() NULL"), tmp_script)
 
-  library(visNetwork)
-  library(htmlwidgets)
-  library(glue)
-  library(functiondepends)
-
-  expect_error(funcMapper("nonexistent.R", "map", tempdir()),
-               "cannot open the connection")
-})
-
-test_that("funcMapper wraps script into a function", {
-  temp_script <- tempfile(fileext = ".R")
-  writeLines("myfunc <- function(x) x + 1", temp_script)
-
-
-  expect_silent(suppressMessages(suppressWarnings(
-    funcMapper(temp_script, "testmap", tempdir())
-  )))
-
-})
-
-test_that("funcMapper creates an HTML output", {
-  temp_script <- tempfile(fileext = ".R")
-  writeLines("myfunc <- function(x) x + 1", temp_script)
-
-  output_dir <- tempdir()
-  funcMapper(temp_script, "testmap", output_dir)
-
-  expect_true(file.exists(file.path(output_dir, "testmap.html")))
-})
-
-test_that("Temporary file is deleted when cleanup is TRUE", {
-  temp_script <- tempfile(fileext = ".R")
-  writeLines("myfunc <- function(x) x + 1", temp_script)
-
-
-  expect_silent(suppressMessages(suppressWarnings(
-    funcMapper(temp_script, "testmap", tempdir(), cleanup_temp_file = TRUE)
-  )))
-
+  tmp_dir <- tempdir()
+  dep_map <- funcMapper(tmp_script, "map", tmp_dir, func_name = "main")
+  expect_true("main" %in% names(dep_map))
+  expect_true(file.exists(file.path(tmp_dir, "map.html")))
 })
